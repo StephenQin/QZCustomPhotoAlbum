@@ -112,6 +112,7 @@
     }
     [self.indexArray removeAllObjects];
     [self.finalImageArr removeAllObjects];
+    [self.imagesArray removeAllObjects];
     CGFloat targetSize = (kScreenWidth - 3) / 4.0;
     _currentCollectionCount = count;
     _currentCollectionTitle = [[_collectionData[_currentCollectionCount] allKeys] lastObject];
@@ -157,7 +158,7 @@
     self.takePhotoView.hidden = YES;
     self.takePhotoBtn.selected = NO;
     [self.takePhotoVc stopCapture];
-    if (self.haveOpen) {return;}
+    if (self.haveOpen && !self.takePhotoVc.haveTackPhoto) {return;}
     NSMutableArray * tempCollectionsArray = [NSMutableArray array];
     FLog(@"点击相册");
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -312,7 +313,7 @@
         if (self.indexArray.count > 1) {// 第一次不截图
             [self.finalImageArr addObject:[self.showView getSnapshotImage]];
         }
-    } else {
+    } else {// 此处有些奇怪，但暂不处理
         [self.indexArray removeObject:indexPath];
         if (self.indexArray.count == 0) {
             self.nextBtn.enabled = NO;

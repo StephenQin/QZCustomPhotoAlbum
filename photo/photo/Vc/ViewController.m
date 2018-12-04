@@ -17,8 +17,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-    FLog(@"我不打印么？");
 }
 
 - (IBAction)go2Photo:(UIButton *)sender {

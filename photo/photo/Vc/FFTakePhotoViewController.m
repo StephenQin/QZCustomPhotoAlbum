@@ -165,6 +165,7 @@
         // 保存图像
         UIImageWriteToSavedPhotosAlbum(result , self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
     }];
+    self.haveTackPhoto = YES;
 }
 /**
  保存相片结束的回调方法

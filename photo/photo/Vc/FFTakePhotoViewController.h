@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FFTakePhotoViewController : UIViewController
-
+@property (nonatomic, assign) BOOL haveTackPhoto;
 /**
  停止拍摄
  */

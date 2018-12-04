@@ -132,18 +132,18 @@
 		F063951E21B5307A008D373E /* Vc */ = {
 			isa = PBXGroup;
 			children = (
-				F063950321B51CCF008D373E /* FFTakePhotoViewController.h */,
-				F063950421B51CCF008D373E /* FFTakePhotoViewController.m */,
-				F063950721B51CE8008D373E /* FFAlbumListViewController.h */,
-				F063950621B51CE8008D373E /* FFAlbumListViewController.m */,
-				F063950A21B51D09008D373E /* FFRootViewController.h */,
-				F063950921B51D09008D373E /* FFRootViewController.m */,
 				F06394E721B519D5008D373E /* ViewController.h */,
 				F06394E821B519D5008D373E /* ViewController.m */,
 				F06394FB21B51C6E008D373E /* FFPhotoPickerViewController.h */,
 				F06394FA21B51C6E008D373E /* FFPhotoPickerViewController.m */,
+				F063950721B51CE8008D373E /* FFAlbumListViewController.h */,
+				F063950621B51CE8008D373E /* FFAlbumListViewController.m */,
+				F063950321B51CCF008D373E /* FFTakePhotoViewController.h */,
+				F063950421B51CCF008D373E /* FFTakePhotoViewController.m */,
 				F063951421B52772008D373E /* FFTestViewController.h */,
 				F063951521B52772008D373E /* FFTestViewController.m */,
+				F063950A21B51D09008D373E /* FFRootViewController.h */,
+				F063950921B51D09008D373E /* FFRootViewController.m */,
 			);
 			path = Vc;
 			sourceTree = "<group>";
