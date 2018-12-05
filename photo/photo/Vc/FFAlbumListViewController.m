@@ -9,7 +9,7 @@
 #import "FFTableViewCell.h"
 
 @interface FFAlbumListViewController ()
-@property (nonatomic, strong) NSArray *albumModelArr;
+@property (nonatomic, copy) NSArray *albumModelArr;
 @end
 
 @implementation FFAlbumListViewController

@@ -6,11 +6,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FFRootViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FFTestViewController : UIViewController
-@property (nonatomic, strong) UIImage *img;
+@interface FFTestViewController : FFRootViewController
+@property (nonatomic, copy) NSArray *rawImgArr;
 @end
 
 NS_ASSUME_NONNULL_END

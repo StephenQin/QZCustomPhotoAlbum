@@ -28,22 +28,24 @@
 @property (nonatomic, weak) UIView *photoAlbumContainView;
 @property (nonatomic, weak) UIView *albumTopControlView;
 
-@property (strong, nonatomic) NSArray<PHAsset*>* currentCollectionData; // 保存所有拿到的PHAsset数据
+@property (copy, nonatomic)   NSArray<PHAsset*>* currentCollectionData; // 保存所有拿到的PHAsset数据
 @property (strong, nonatomic) NSMutableArray * imagesArray; // 保存小图片的数组
 @property (strong, nonatomic) NSMutableArray * indexArray;  // 保存选中的index
 @property (assign, nonatomic) PHImageRequestID requestID;
+@property (assign, nonatomic) PHImageRequestID requestRawID;
 //@property (assign, nonatomic) NSInteger maxSelectCount;
 @property (nonatomic, strong) NSMutableArray *finalImageArr; // 最终得到的照片数组
 @property (nonatomic, weak) UIView *takePhotoView;
 @property (nonatomic, strong) FFTakePhotoViewController *takePhotoVc;
 #pragma mark ————— 新添加 —————
 @property (nonatomic, weak) UIButton *chooseAlbumBtn; // 选择其他的相册
-@property (strong, nonatomic) NSArray<NSDictionary *> *collectionData; // 其他相册数据
+@property (copy, nonatomic) NSArray<NSDictionary *> *collectionData; // 其他相册数据
 @property (assign, nonatomic) NSInteger currentCollectionCount;   // 当前选择的是第几个相册
 @property (strong, nonatomic) NSString* currentCollectionTitle;   // 当前选择的相册的名字
 @property (nonatomic, assign) BOOL haveOpen; // 相册是否打开过
 //@property (nonatomic, strong) CALayer *lineLayer;
 @property (nonatomic, strong) PHCachingImageManager *imageManager;
+@property (nonatomic, strong) NSMutableArray *rawImageArr;
 @end
 
 @implementation FFPhotoPickerViewController
@@ -75,10 +77,11 @@
     if (self.indexArray.count > self.finalImageArr.count) {
         UIImage *img = [self.showView getSnapshotImage];
         [self.finalImageArr addObject:img];
-        FFTestViewController *test = [FFTestViewController new];
-        test.img = img;
-        [self presentViewController:test animated:YES completion:nil];
     }
+    FFTestViewController *test = [FFTestViewController new];
+//    test.rawImgArr = self.rawImageArr.copy; // 原图
+    test.rawImgArr = self.finalImageArr.copy; // 截图
+    [self presentViewController:test animated:YES completion:nil];
     FLog(@"最后得到的图片数组%@",self.finalImageArr);
 }
 
@@ -113,6 +116,7 @@
     [self.indexArray removeAllObjects];
     [self.finalImageArr removeAllObjects];
     [self.imagesArray removeAllObjects];
+    [self.rawImageArr removeAllObjects];
     CGFloat targetSize = (kScreenWidth - 3) / 4.0;
     _currentCollectionCount = count;
     _currentCollectionTitle = [[_collectionData[_currentCollectionCount] allKeys] lastObject];
@@ -228,6 +232,7 @@
     options.progressHandler = ^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
         NSLog(@"加载进度是%lf",progress);
         dispatch_async(dispatch_get_main_queue(), ^{
+            self.showView.loadingProgress = progress;
             if (error) {
                 NSString * errorString = error.userInfo[@"NSLocalizedDescription"];
                 if (errorString) {
@@ -238,13 +243,40 @@
     };
     CGSize targetSize = CGSizeMake(asset.pixelWidth,asset.pixelHeight);//self.bigImgView.bounds.size;
     weakself.requestID = [self.imageManager requestImageForAsset:asset targetSize:targetSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-//        BOOL downloadFinined = ![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue];
         if (result) {
             [self.showView setBigImage:result];
         }
     }];
 }
 
+// 从一个asset得到一张原始的image
+- (void)getRawImgeFromAPHAsset:(PHAsset *)asset {
+    if (_requestRawID) {
+        [self.imageManager cancelImageRequest:_requestRawID];
+        _requestRawID = 0;
+    }
+    PHImageRequestOptions * options = [[PHImageRequestOptions alloc] init];
+    options.resizeMode = PHImageRequestOptionsResizeModeExact;
+    options.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
+    options.networkAccessAllowed = YES;
+    kWeakSelf(self);
+    options.progressHandler = ^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error) {
+                NSString * errorString = error.userInfo[@"NSLocalizedDescription"];
+                if (errorString) {
+                    [MBProgressHUD showError:errorString];
+                }
+            }
+        });
+    };
+    weakself.requestRawID = [self.imageManager requestImageForAsset:asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+        BOOL downloadFinined = ![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue];
+        if (downloadFinined && result) {
+            [self.rawImageArr addObject:result];
+        }
+    }];
+}
 #pragma mark ————— FFFindAlbumCellDelegate —————
 - (void)albumCell:(FFFindAlbumCell *)albumCell didSelectedSeltectBtn:(UIButton *)seltectBtn {
     if (seltectBtn.selected) {
@@ -253,12 +285,14 @@
         if (index <= self.finalImageArr.count) {
             [self.finalImageArr removeObjectAtIndex:index - 1];
         }
+        if (index <= self.rawImageArr.count) {
+            [self.rawImageArr removeObjectAtIndex:index - 1];
+        }
         [self.indexArray removeObject:[self.collectionView indexPathForCell:albumCell]];
         if (self.indexArray.count == 0) {self.nextBtn.enabled = NO;}
         [seltectBtn setTitle:@"" forState:UIControlStateNormal];
         [self.collectionView reloadItemsAtIndexPaths:self.indexArray];
         [self collectionView:self.collectionView didSelectItemAtIndexPath:self.indexArray.lastObject];
-        
     }
     FLog(@"取消选中后final数组%@",self.finalImageArr);
     FLog(@"取消选中后index数组%@",self.indexArray);
@@ -310,9 +344,10 @@
         }
         [self.indexArray addObject:indexPath];
         self.nextBtn.enabled = YES;
-        if (self.indexArray.count > 1) {// 第一次不截图
+        if (self.indexArray.count > 1 && self.indexArray.count - 1 > self.finalImageArr.count) {// 第一次不截图
             [self.finalImageArr addObject:[self.showView getSnapshotImage]];
         }
+        [self getRawImgeFromAPHAsset:asset];
     } else {// 此处有些奇怪，但暂不处理
         [self.indexArray removeObject:indexPath];
         if (self.indexArray.count == 0) {
@@ -417,6 +452,13 @@
     return YES;
 }
 #pragma mark ————— lazyLoad —————
+- (NSMutableArray *)rawImageArr {
+    if (!_rawImageArr) {
+        NSMutableArray *rawImageArr = [NSMutableArray array];
+        _rawImageArr = rawImageArr;
+    }
+    return _rawImageArr;
+}
 - (UIView *)albumTopControlView {
     if (!_albumTopControlView) {
         UIView *albumTopControlView = [UIView new];

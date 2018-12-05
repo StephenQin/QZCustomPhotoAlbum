@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "FFPhotoPickerViewController.h"
+#import "QZSectorProgressView.h"
 
 @interface ViewController ()
 
@@ -17,6 +18,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    QZSectorProgressView *proView = [[QZSectorProgressView alloc] init];//WithFrame:CGRectMake(100, 100, 100, 100)];
+    [self.view addSubview:proView];
+    [proView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.mas_offset(100);
+        make.width.height.mas_equalTo(50);
+    }];
+    proView.progress = 0.4;
+    
 }
 
 - (IBAction)go2Photo:(UIButton *)sender {

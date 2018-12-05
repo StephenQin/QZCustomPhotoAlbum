@@ -7,12 +7,14 @@
 //
 
 #import "FFFindPhotoShowView.h"
+#import "QZSectorProgressView.h"
 
 @interface FFFindPhotoShowView()<UIScrollViewDelegate>
 //@property (nonatomic, weak) UIScrollView *scroView;
 @property (nonatomic, weak) UIView *containView;
 @property (nonatomic, weak) UIImageView *photoView;
 @property (nonatomic, strong) NSMutableArray *layerArr;
+@property (nonatomic, weak) QZSectorProgressView *progressView;
 @end
 @implementation FFFindPhotoShowView
 
@@ -22,7 +24,14 @@
     [self.photoView setImage:bigImage];
     [self makeupUI];
 }
-
+- (void)setLoadingProgress:(CGFloat)loadingProgress {
+    _loadingProgress = loadingProgress;
+    self.progressView.progress = loadingProgress;
+    self.progressView.hidden = NO;
+    if (loadingProgress == 1) {
+        self.progressView.hidden = YES;
+    }
+}
 #pragma mark ————— 赋值 —————
 - (UIImage *)getSnapshotImage {
     UIImage *snapshotImage = [self screenshotOfView:self.scroView];
@@ -44,18 +53,14 @@
     return image;
 }
 - (UIImage *)captureImage:(UIImage *)image Rect:(CGRect)rect {
-    
     // 图片的实际宽度
     CGFloat realImageW = CGImageGetWidth(image.CGImage);
-    
     // 图片的实际宽度与@1x图片的宽度之比
     CGFloat scale = realImageW/image.size.width;
-    
     CGFloat captureX = rect.origin.x * scale;
     CGFloat captureY = rect.origin.y * scale;
     CGFloat captureW = rect.size.width * scale;
     CGFloat captureH = rect.size.height * scale;
-    
     CGImageRef imgRef = image.CGImage;
     CGImageRef imageRef = CGImageCreateWithImageInRect(imgRef, CGRectMake(captureX, captureY,captureW, captureH));
     UIImage *thumbScale = [UIImage imageWithCGImage:imageRef];
@@ -128,6 +133,10 @@
         }
     }];
     [self addGrid:self];
+    [self.progressView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.right.mas_equalTo(self.scroView).offset(-5);
+        make.width.height.mas_equalTo(20);
+    }];
 }
 - (void)addGrid:(UIView *)view {
     CGFloat widthView = view.frame.size.width;
@@ -150,6 +159,15 @@
     }
 }
 #pragma mark ————— lazyLoad —————
+- (QZSectorProgressView *)progressView {
+    if (!_progressView) {
+        QZSectorProgressView *progressView = [QZSectorProgressView new];
+        progressView.hidden = YES;
+        [self addSubview:progressView];
+        _progressView = progressView;
+    }
+    return _progressView;
+}
 - (UIImageView *)photoView {
     if (!_photoView) {
         UIImageView *photoView = [[UIImageView alloc] initWithImage:kPlaceholderImg];

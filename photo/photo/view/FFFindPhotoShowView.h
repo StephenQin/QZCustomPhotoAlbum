@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FFFindPhotoShowView : UIView
 @property (nonatomic, strong) UIImage *bigImage;
-@property (nonatomic, weak) UIScrollView *scroView;
+@property (nonatomic, weak)   UIScrollView *scroView;
+@property (nonatomic, assign) CGFloat loadingProgress;
 - (UIImage *)getSnapshotImage;
 @end
 

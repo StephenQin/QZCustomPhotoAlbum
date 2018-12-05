@@ -26,6 +26,7 @@
 		F063951621B52772008D373E /* FFTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F063951521B52772008D373E /* FFTestViewController.m */; };
 		F063951A21B52CBA008D373E /* UIButton+FFMakeBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = F063951821B52CBA008D373E /* UIButton+FFMakeBtn.m */; };
 		F063951D21B52E64008D373E /* MBProgressHUD+SP.m in Sources */ = {isa = PBXBuildFile; fileRef = F063951C21B52E64008D373E /* MBProgressHUD+SP.m */; };
+		F063952421B7624D008D373E /* QZSectorProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = F063952321B7624D008D373E /* QZSectorProgressView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +67,8 @@
 		F063951921B52CBA008D373E /* UIButton+FFMakeBtn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+FFMakeBtn.h"; sourceTree = "<group>"; };
 		F063951B21B52E64008D373E /* MBProgressHUD+SP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+SP.h"; sourceTree = "<group>"; };
 		F063951C21B52E64008D373E /* MBProgressHUD+SP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD+SP.m"; sourceTree = "<group>"; };
+		F063952221B7624D008D373E /* QZSectorProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QZSectorProgressView.h; sourceTree = "<group>"; };
+		F063952321B7624D008D373E /* QZSectorProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QZSectorProgressView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +161,8 @@
 				F06394FD21B51CA1008D373E /* FFFindAlbumCell.m */,
 				F063950021B51CB6008D373E /* FFFindPhotoShowView.h */,
 				F063950121B51CB6008D373E /* FFFindPhotoShowView.m */,
+				F063952221B7624D008D373E /* QZSectorProgressView.h */,
+				F063952321B7624D008D373E /* QZSectorProgressView.m */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -321,6 +326,7 @@
 				F063951A21B52CBA008D373E /* UIButton+FFMakeBtn.m in Sources */,
 				F063951D21B52E64008D373E /* MBProgressHUD+SP.m in Sources */,
 				F063951321B525FA008D373E /* FFAlbumListModel.m in Sources */,
+				F063952421B7624D008D373E /* QZSectorProgressView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

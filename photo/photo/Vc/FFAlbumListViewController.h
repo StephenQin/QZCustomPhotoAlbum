@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 typedef void(^FFAlbumClickBlcok)(NSInteger index);
 @interface FFAlbumListViewController : FFRootViewController
-@property (nonatomic, strong) NSArray *albumInfoArr;
+@property (nonatomic, copy) NSArray *albumInfoArr;
 @property (copy, nonatomic) FFAlbumClickBlcok clickBlock;
 @end
 
