@@ -31,7 +31,9 @@
     // 定义扇形中心
     CGPoint origin = CGPointMake(width, width);
     // 定义扇形半径
-    CGFloat radius = width;
+    CGFloat radius = width - 2;
+    // 定义圆形半径
+    CGFloat acrRadius = width - 1;
     // 设定扇形起点位置
     CGFloat startAngle = - M_PI_2;
     // 根据进度计算扇形结束位置
@@ -41,9 +43,17 @@
     // 从弧线结束为止绘制一条线段到圆心。这样系统会自动闭合图形,绘制一条从圆心到弧线起点的线段。
     [sectorPath addLineToPoint:origin];
     // 设置扇形的填充颜色
-    [[UIColor colorWithWhite:.7 alpha:.7] set];
+    [[UIColor colorWithWhite:.7 alpha:.7] setFill];
     // 设置扇形的填充模式
     [sectorPath fill];
+    // 画圆
+    UIBezierPath *arcPath = [UIBezierPath bezierPathWithArcCenter:origin radius:acrRadius startAngle:0 endAngle:M_PI * 2 clockwise:NO];
+    // 设置线宽
+    arcPath.lineWidth = 1 / [UIScreen mainScreen].scale;
+    // 设置圆的颜色
+    [[UIColor colorWithWhite:.7 alpha:.7] setStroke];
+    // 描边
+    [arcPath stroke];
 }
 
 
